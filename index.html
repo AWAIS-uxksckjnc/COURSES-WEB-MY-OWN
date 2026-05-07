@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>DevElite Pro | Premium Course Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #010101;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #f1f5f9;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #0a0a0f; }
+        ::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 20px; }
+
+        @keyframes fadeSlideUp {
+            0% { opacity: 0; transform: translateY(35px) scale(0.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .animate-fade-up {
+            animation: fadeSlideUp 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+        }
+
+        .glass-premium {
+            background: rgba(10, 10, 18, 0.75);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: all 0.35s ease;
+        }
+
+        .glass-premium:hover {
+            border-color: rgba(99,102,241,0.5);
+            background: rgba(20, 20, 38, 0.9);
+            transform: translateY(-4px);
+        }
+
+        .gradient-text {
+            background: linear-gradient(125deg, #fff, #a5b4fc, #6366f1);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+        }
+
+        .btn-whatsapp {
+            background: linear-gradient(95deg, #25D366, #128C7E);
+            transition: all 0.25s;
+            box-shadow: 0 4px 12px rgba(37,211,102,0.2);
+        }
+        .btn-whatsapp:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(37,211,102,0.4);
+        }
+
+        .btn-outline-premium {
+            border: 1px solid rgba(99,102,241,0.5);
+            background: rgba(99,102,241,0.1);
+            transition: all 0.2s;
+        }
+        .btn-outline-premium:hover {
+            background: rgba(99,102,241,0.3);
+            border-color: #6366f1;
+        }
+
+        /* Admin panel hidden style */
+        #adminPanel {
+            position: fixed;
+            top: 0;
+            right: -500px;
+            width: 100%;
+            max-width: 500px;
+            height: 100vh;
+            background: rgba(3, 3, 10, 0.98);
+            backdrop-filter: blur(24px);
+            border-left: 1px solid rgba(99,102,241,0.4);
+            z-index: 3000;
+            transition: right 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            overflow-y: auto;
+            box-shadow: -25px 0 50px rgba(0,0,0,0.7);
+        }
+        #adminPanel.active {
+            right: 0;
+        }
+
+        input, textarea, select {
+            background: #12121a !important;
+            border: 1px solid #262633 !important;
+            border-radius: 20px !important;
+            color: white !important;
+            outline: none;
+            transition: 0.2s;
+        }
+        input:focus, textarea:focus {
+            border-color: #6366f1 !important;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+        }
+
+        .course-card {
+            transition: all 0.3s ease;
+        }
+        .price-tag {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border-radius: 30px;
+            padding: 6px 16px;
+            font-weight: bold;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(99,102,241,0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(99,102,241,0); }
+            100% { box-shadow: 0 0 0 0 rgba(99,102,241,0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-[1000] bg-black/80 backdrop-blur-xl border-b border-white/10 px-6 md:px-12 py-4 flex justify-between items-center">
+        <div class="text-2xl font-extrabold tracking-tight flex items-center gap-2">
+            <i class="fa-brands fa-squarespace text-indigo-500"></i>
+            <span>DEV<span class="text-indigo-500">ELITE</span></span>
+        </div>
+        <div class="hidden md:flex space-x-10 text-sm font-semibold text-gray-300">
+            <a href="#courses" class="hover:text-indigo-400 transition-all">Courses</a>
+            <a href="#features" class="hover:text-indigo-400 transition-all">Features</a>
+            <a href="#studio" class="hover:text-indigo-400 transition-all">Studio</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <button id="openAdminLoginBtn" class="text-sm font-bold px-6 py-2.5 rounded-full border border-white/20 hover:bg-white hover:text-black transition-all"><i class="fas fa-shield-alt mr-2"></i>Admin Hub</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-44 pb-16 px-6 overflow-hidden">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="inline-flex px-5 py-2 rounded-full border border-indigo-500/30 bg-indigo-500/5 text-indigo-300 text-xs font-black uppercase tracking-wider mb-5 backdrop-blur-sm">
+                <i class="fas fa-gem mr-2"></i> <span id="heroBadge">PREMIUM COURSE MARKETPLACE</span>
+            </div>
+            <h1 class="text-6xl md:text-7xl font-black mt-6 mb-5 leading-[1.2] tracking-tight">
+                <span id="heroTitle" class="gradient-text">Master Modern Development</span>
+            </h1>
+            <p id="heroDesc" class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-8 leading-relaxed">Industry-ready courses — Direct WhatsApp purchase. Click & message instantly.</p>
+            <div class="flex flex-wrap justify-center gap-5">
+                <a href="#courses" class="btn-outline-premium text-white px-8 py-4 rounded-2xl font-bold transition flex items-center gap-2"><i class="fas fa-arrow-down"></i> Explore Courses</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Grid Section (premium dynamic courses with buy button) -->
+    <section id="courses" class="py-12 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-extrabold"><span class="gradient-text">Elite Course Library</span></h2>
+            <p class="text-gray-400 mt-3">Click "Buy on WhatsApp" — message will be sent directly to Sohail Mods</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="coursesContainer">
+            <!-- courses injected via js from master array -->
+        </div>
+    </section>
+
+    <!-- Features / Why Us -->
+    <section id="features" class="py-20 px-6 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="glass-premium p-8 rounded-3xl text-center">
+                <div class="w-16 h-16 bg-indigo-500/15 rounded-2xl flex items-center justify-center mx-auto mb-5"><i class="fas fa-bolt text-indigo-400 text-2xl"></i></div>
+                <h3 class="text-xl font-bold mb-2">Instant WhatsApp Delivery</h3>
+                <p class="text-gray-400 text-sm">One click & pre-filled message — course access within minutes.</p>
+            </div>
+            <div class="glass-premium p-8 rounded-3xl text-center">
+                <div class="w-16 h-16 bg-emerald-500/15 rounded-2xl flex items-center justify-center mx-auto mb-5"><i class="fas fa-code-branch text-emerald-400 text-2xl"></i></div>
+                <h3 class="text-xl font-bold mb-2">Project-Based Learning</h3>
+                <p class="text-gray-400 text-sm">Real-world assets, source code & lifetime updates.</p>
+            </div>
+            <div class="glass-premium p-8 rounded-3xl text-center">
+                <div class="w-16 h-16 bg-amber-500/15 rounded-2xl flex items-center justify-center mx-auto mb-5"><i class="fas fa-user-shield text-amber-400 text-2xl"></i></div>
+                <h3 class="text-xl font-bold mb-2">Elite Support Group</h3>
+                <p class="text-gray-400 text-sm">Private community + 1:1 mentorship from Sohail.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal (Admin only) -->
+    <div id="adminLoginModal" class="fixed inset-0 z-[2000] hidden items-center justify-center bg-black/90 backdrop-blur-xl transition-all">
+        <div class="glass-premium w-full max-w-md mx-6 p-9 rounded-3xl border border-indigo-500/30 shadow-2xl">
+            <div class="flex justify-between items-center mb-5">
+                <h3 class="text-2xl font-black"><span class="gradient-text">Admin Vault</span></h3>
+                <button id="closeAdminLoginModal" class="text-gray-400 text-3xl hover:text-white">&times;</button>
+            </div>
+            <p class="text-gray-300 text-sm mb-6">Enter master keys to manage courses (add/edit/delete)</p>
+            <form id="adminAuthForm">
+                <input type="text" id="adminUsername" placeholder="Admin ID" class="w-full px-5 py-3 rounded-xl mb-4" required>
+                <input type="password" id="adminPassword" placeholder="Master Key" class="w-full px-5 py-3 rounded-xl mb-6" required>
+                <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-3.5 rounded-xl font-bold text-white shadow-lg">Unlock Full Control</button>
+            </form>
+            <p class="text-center text-[11px] text-gray-500 mt-5">MADE BY SOHAIL</p>
+        </div>
+    </div>
+
+    <!-- Admin Panel (CRUD for Courses + WhatsApp message preview) -->
+    <div id="adminPanel">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6 pb-3 border-b border-white/10">
+                <div class="flex items-center gap-2"><i class="fas fa-crown text-yellow-500 text-2xl"></i><h2 class="text-xl font-extrabold">COURSE ADMIN STUDIO</h2></div>
+                <button id="closeAdminPanelBtn" class="text-gray-400 text-2xl hover:text-white"><i class="fas fa-times-circle"></i></button>
+            </div>
+            <div class="mb-5 bg-indigo-500/10 rounded-2xl p-3 text-center text-sm">✧ Full CRUD: Add, Edit, Delete Courses ✧<br>WhatsApp buy button auto-generates message</div>
+            
+            <!-- Add Course Form -->
+            <div class="bg-white/5 p-5 rounded-2xl mb-7">
+                <h3 class="font-bold mb-3"><i class="fas fa-plus-circle text-emerald-400 mr-2"></i>Add New Course</h3>
+                <div class="grid grid-cols-1 gap-3">
+                    <input type="text" id="newCourseTitle" placeholder="Course Title (ex: Unreal Engine Mastery)" class="w-full p-2 rounded-xl text-sm">
+                    <textarea id="newCourseDesc" rows="2" placeholder="Short description" class="w-full p-2 rounded-xl text-sm"></textarea>
+                    <input type="text" id="newCoursePrice" placeholder="Price (ex: $49 or ₹1499)" class="w-full p-2 rounded-xl text-sm">
+                    <input type="text" id="newCourseIcon" placeholder="FontAwesome icon (ex: fa-gamepad, fa-code)" class="w-full p-2 rounded-xl text-sm">
+                    <button id="addCourseBtn" class="bg-emerald-600 py-2 rounded-xl font-bold hover:bg-emerald-500 transition">➕ Create Course</button>
+                </div>
+            </div>
+
+            <!-- Courses List with Edit/Delete -->
+            <h3 class="font-bold mb-3"><i class="fas fa-list-ul mr-2"></i>Manage Existing Courses</h3>
+            <div id="adminCoursesList" class="space-y-3 max-h-80 overflow-y-auto pr-2">
+                <!-- dynamic list -->
+            </div>
+            <button id="fullAdminLogout" class="w-full mt-6 py-3 rounded-xl bg-red-500/20 text-red-400 font-bold border border-red-500/30 hover:bg-red-500/30 transition"><i class="fas fa-sign-out-alt"></i> Logout & Hide Panel</button>
+        </div>
+    </div>
+
+    <footer class="text-center py-12 border-t border-white/5 mt-16 text-gray-500 text-sm">
+        <p>© 2025 DevElite Pro — Direct WhatsApp Purchase | Managed by Sohail Mods</p>
+    </footer>
+
+    <script>
+        // ---------- MASTER COURSES DATA ----------
+        let coursesData = [
+            { id: "c1", title: "Full Stack Web Architecture", description: "Next.js, Tailwind, Prisma, PostgreSQL — build real SaaS apps.", price: "$79", icon: "fa-globe" },
+            { id: "c2", title: "Unity Game Dev & Modding", description: "C# scripting, shaders, asset modding & optimization.", price: "$99", icon: "fa-gamepad" },
+            { id: "c3", title: "Flutter Mobile Elite", description: "Cross-platform apps with Firebase, animations & state mgmt.", price: "$69", icon: "fa-mobile-alt" },
+            { id: "c4", title: "Advanced React & Next.js", description: "Server components, authentication, performance patterns.", price: "$89", icon: "fa-react" },
+            { id: "c5", title: "Cyber Security for Devs", description: "Ethical hacking basics, secure coding & Web3 security.", price: "$109", icon: "fa-shield-haltered" }
+        ];
+
+        let isAdmin = false;
+        const YOUR_WHATSAPP_NUMBER = "923319694481"; // REPLACE WITH YOUR ACTUAL WHATSAPP NUMBER (with country code, no '+' or spaces)
+        // For demo, message preview: user will be prompted with prefilled text including course name.
+        // We'll use WhatsApp API: https://wa.me/NUMBER?text=encodedMessage
+
+        function formatWhatsAppLink(courseName) {
+            let message = `HELLO SOHAIL I WANT TO BUY ${courseName} PLZ GIVE ME COURSE AS SOON AS POSSIBLE THANKS.`;
+            let encoded = encodeURIComponent(message);
+            return `https://wa.me/${YOUR_WHATSAPP_NUMBER}?text=${encoded}`;
+        }
+
+        // Render courses on frontend (public)
+        function renderFrontendCourses() {
+            const container = document.getElementById('coursesContainer');
+            if(!container) return;
+            container.innerHTML = '';
+            coursesData.forEach(course => {
+                const card = document.createElement('div');
+                card.className = 'glass-premium rounded-3xl overflow-hidden flex flex-col h-full course-card transform transition-all duration-300';
+                card.innerHTML = `
+                    <div class="p-7 flex-1">
+                        <div class="w-14 h-14 bg-indigo-500/15 rounded-2xl flex items-center justify-center mb-5 border border-indigo-500/20">
+                            <i class="fas ${course.icon} text-indigo-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">${escapeHtml(course.title)}</h3>
+                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">${escapeHtml(course.description)}</p>
+                        <div class="flex items-center justify-between mt-auto pt-2">
+                            <span class="price-tag text-white text-sm font-black">${escapeHtml(course.price)}</span>
+                            <button class="buy-wa-btn bg-[#25D366] hover:bg-[#20b359] text-white px-5 py-2 rounded-xl font-bold transition flex items-center gap-2 shadow-md" data-course-title="${escapeHtml(course.title)}">
+                                <i class="fab fa-whatsapp"></i> Buy on WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // attach event listeners to all buy buttons
+            document.querySelectorAll('.buy-wa-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const courseName = btn.getAttribute('data-course-title');
+                    const waLink = formatWhatsAppLink(courseName);
+                    window.open(waLink, '_blank');
+                });
+            });
+        }
+
+        // Admin UI: render courses list with edit/delete
+        function renderAdminCourseList() {
+            const adminListDiv = document.getElementById('adminCoursesList');
+            if(!adminListDiv) return;
+            adminListDiv.innerHTML = '';
+            coursesData.forEach(course => {
+                const item = document.createElement('div');
+                item.className = 'bg-black/40 p-4 rounded-xl border border-white/10 flex flex-wrap justify-between items-center gap-3';
+                item.innerHTML = `
+                    <div class="flex-1 min-w-[160px]">
+                        <div class="flex items-center gap-2"><i class="fas ${course.icon} text-indigo-300"></i><span class="font-bold text-sm">${escapeHtml(course.title)}</span> <span class="text-emerald-400 text-xs ml-2">${escapeHtml(course.price)}</span></div>
+                        <p class="text-xs text-gray-400 truncate">${escapeHtml(course.description.substring(0, 70))}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="edit-course-btn bg-indigo-600/80 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-indigo-500" data-id="${course.id}"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="delete-course-btn bg-red-600/80 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-red-500" data-id="${course.id}"><i class="fas fa-trash"></i> Del</button>
+                    </div>
+                `;
+                adminListDiv.appendChild(item);
+            });
+
+            // Edit events
+            document.querySelectorAll('.edit-course-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = btn.getAttribute('data-id');
+                    const course = coursesData.find(c => c.id === id);
+                    if(course) {
+                        let newTitle = prompt("Edit course title:", course.title);
+                        if(newTitle !== null && newTitle.trim() !== "") course.title = newTitle.trim();
+                        let newDesc = prompt("Edit description:", course.description);
+                        if(newDesc !== null) course.description = newDesc.trim();
+                        let newPrice = prompt("Edit price (ex: $99):", course.price);
+                        if(newPrice !== null && newPrice.trim() !== "") course.price = newPrice.trim();
+                        let newIcon = prompt("Edit icon class (fa-xxx):", course.icon);
+                        if(newIcon !== null && newIcon.trim() !== "") course.icon = newIcon.trim();
+                        renderFrontendCourses();
+                        renderAdminCourseList();
+                        showToast("Course updated!");
+                    }
+                });
+            });
+
+            // Delete events
+            document.querySelectorAll('.delete-course-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = btn.getAttribute('data-id');
+                    if(confirm("⚠️ Delete this course permanently?")) {
+                        coursesData = coursesData.filter(c => c.id !== id);
+                        renderFrontendCourses();
+                        renderAdminCourseList();
+                        showToast("Course deleted.");
+                    }
+                });
+            });
+        }
+
+        function addNewCourse() {
+            const title = document.getElementById('newCourseTitle').value.trim();
+            const desc = document.getElementById('newCourseDesc').value.trim();
+            const price = document.getElementById('newCoursePrice').value.trim();
+            let icon = document.getElementById('newCourseIcon').value.trim();
+            if(!title || !desc || !price) {
+                alert("Please fill Title, Description and Price fields.");
+                return;
+            }
+            if(!icon) icon = "fa-code";
+            if(!icon.startsWith('fa-')) icon = 'fa-' + icon;
+            const newId = "c" + Date.now();
+            coursesData.push({
+                id: newId,
+                title: title,
+                description: desc,
+                price: price,
+                icon: icon
+            });
+            renderFrontendCourses();
+            renderAdminCourseList();
+            document.getElementById('newCourseTitle').value = '';
+            document.getElementById('newCourseDesc').value = '';
+            document.getElementById('newCoursePrice').value = '';
+            document.getElementById('newCourseIcon').value = '';
+            showToast("✅ New course added successfully!");
+        }
+
+        function showToast(msg) {
+            let toastDiv = document.createElement('div');
+            toastDiv.innerText = msg;
+            toastDiv.style.position = 'fixed';
+            toastDiv.style.bottom = '25px';
+            toastDiv.style.left = '50%';
+            toastDiv.style.transform = 'translateX(-50%)';
+            toastDiv.style.backgroundColor = '#1e1b4b';
+            toastDiv.style.color = '#c7d2fe';
+            toastDiv.style.padding = '12px 24px';
+            toastDiv.style.borderRadius = '40px';
+            toastDiv.style.zIndex = '9999';
+            toastDiv.style.fontWeight = 'bold';
+            toastDiv.style.border = '1px solid #6366f1';
+            toastDiv.style.backdropFilter = 'blur(8px)';
+            document.body.appendChild(toastDiv);
+            setTimeout(() => toastDiv.remove(), 2200);
+        }
+
+        function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+        // Admin login logic
+        function attemptLogin(username, pwd) {
+            if(username === "sohail" && pwd === "msmods") {
+                isAdmin = true;
+                document.getElementById('adminLoginModal').classList.add('hidden');
+                document.getElementById('adminLoginModal').style.display = 'none';
+                document.body.style.overflow = 'auto';
+                document.getElementById('adminPanel').classList.add('active');
+                renderAdminCourseList();
+                showToast("Admin Access Granted | Full CRUD Enabled");
+            } else {
+                alert("ACCESS DENIED! Master credentials: admin / elite2025");
+            }
+        }
+
+        function logoutAdmin() {
+            isAdmin = false;
+            document.getElementById('adminPanel').classList.remove('active');
+            showToast("Admin session closed. Panel hidden.");
+        }
+
+        // Event listeners
+        document.getElementById('openAdminLoginBtn')?.addEventListener('click', () => {
+            if(isAdmin) {
+                document.getElementById('adminPanel').classList.add('active');
+            } else {
+                document.getElementById('adminLoginModal').style.display = 'flex';
+                document.getElementById('adminLoginModal').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+
+        document.getElementById('closeAdminLoginModal')?.addEventListener('click', () => {
+            document.getElementById('adminLoginModal').classList.add('hidden');
+            document.getElementById('adminLoginModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        document.getElementById('closeAdminPanelBtn')?.addEventListener('click', () => {
+            document.getElementById('adminPanel').classList.remove('active');
+        });
+        document.getElementById('fullAdminLogout')?.addEventListener('click', logoutAdmin);
+        document.getElementById('adminAuthForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = document.getElementById('adminUsername').value;
+            const pass = document.getElementById('adminPassword').value;
+            attemptLogin(user, pass);
+        });
+        document.getElementById('addCourseBtn')?.addEventListener('click', addNewCourse);
+
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('adminLoginModal');
+            if(e.target === modal) {
+                modal.classList.add('hidden');
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Initial render
+        renderFrontendCourses();
+        // Set default hidden login modal
+        document.getElementById('adminLoginModal').style.display = 'none';
+        document.getElementById('adminLoginModal').classList.add('hidden');
+        document.getElementById('adminPanel').classList.remove('active');
+        
+        // Intersection observer for fade animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {threshold: 0.1});
+        document.querySelectorAll('.glass-premium, .course-card').forEach(el => { el.style.opacity = '0'; observer.observe(el); });
+    </script>
+</body>
+</html>
